@@ -1,50 +1,118 @@
-# Welcome to your Expo app 👋
+# MAD201 - Cross Platform Mobile Development
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+## Assignment 5: Task Manager App
 
-## Get started
+**Student Name:** Darshilkumar Karkar  
+**Student ID:** A00203357  
+**Submission Date:** December 10, 2025  
 
-1. Install dependencies
+---
 
-   ```bash
-   npm install
-   ```
+## Overview
 
-2. Start the app
+In this assignment, students will build a Task Manager App that allows users to create, view, update, and delete tasks.
 
-   ```bash
-   npx expo start
-   ```
+The app will include multiple screens connected using React Navigation (Stack & Tabs) and manage app-wide data using Context API or Redux for state management.
 
-In the output, you'll find options to open the app in a
+This project will help students apply key React Native concepts in real-world scenarios — combining navigation, data flow, and state handling across components.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## Objective
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+Students will demonstrate their ability to:
 
-## Get a fresh project
+* Implement multi-screen navigation using Stack and Tab navigators.
+* Manage and share state between components using Context API or Redux.
+* Use useState and useEffect to handle dynamic data.
+* Pass and receive data between screens using navigation props.
+* Apply proper project structure and reusable component design.
 
-When you're ready, run:
+## App Concept
 
-```bash
-npm run reset-project
-```
+Create a mobile app that helps users track daily tasks.
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+**Users can:**
 
-## Learn more
+* Add new tasks (title + description).
+* View all tasks in a list.
+* Mark tasks as completed.
+* View task details or delete tasks.
 
-To learn more about developing your project with Expo, look at the following resources:
+---
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## Requirements
 
-## Join the community
+### Part A – Home Screen
 
-Join our community of developers creating universal apps.
+* Display all tasks using a FlatList.
+* Each item shows task title and status (completed / pending).
+* A floating button (TouchableOpacity or Pressable) opens the Add Task Screen.
+* Example layout:
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+```javascript
+<TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate('AddTask')}>
+    <Text style={styles.addText}>+</Text>
+</TouchableOpacity>
+Part B – Add Task Screen
+Form with:
+
+TextInput for task title
+
+TextInput for task description
+
+“Save” button
+
+On submission:
+
+Add the new task to global state using Context or Redux.
+
+Navigate back to home screen.
+
+Part C – Task Detail Screen
+Displays selected task title, description, and status.
+
+Options to mark complete, edit, or delete.
+
+Use route parameters to pass data:
+
+JavaScript
+
+const { task } = route.params;
+Part D – Completed Tasks Screen (Tab Navigation)
+Displays only completed tasks.
+
+Demonstrates Tab Navigation between “All Tasks" and "Completed Tasks”.
+
+Part E – Navigation Structure
+Use both Stack and Tab navigation combined:
+
+Stack Navigator: Handles screen flow (Home -> Add Task -> Task Details)
+
+Tab Navigator: Provides two tabs under Home (All Tasks | Completed Tasks)
+
+Example:
+
+JavaScript
+
+const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
+
+function TaskTabs() {
+  return (
+    <Tab.Navigator>
+      <Tab.Screen name="All Tasks" component={AllTasksScreen} />
+      <Tab.Screen name="Completed" component={CompletedTasksScreen} />
+    </Tab.Navigator>
+  );
+}
+
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Tasks" component={TaskTabs} />
+        <Stack.Screen name="AddTask" component={AddTaskScreen} />
+        <Stack.Screen name="TaskDetails" component={TaskDetailScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}

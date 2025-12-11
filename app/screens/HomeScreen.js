@@ -1,29 +1,36 @@
-/* HomeScreen.js - Displays list of tasks
-  Student: Darshilkumar Karkar - A00203357
-*/
-import { useContext } from 'react';
+import React, { useContext } from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { TaskContext } from '../context/TaskContext';
 
-const HomeScreen = ({ navigation }) => {
+export default function HomeScreen({ navigation }) {
   const { tasks, toggleTask, deleteTask } = useContext(TaskContext);
 
   const renderItem = ({ item }) => (
-    <View style={styles.taskCard}>
-      <View style={styles.taskInfo}>
-        <Text style={[styles.title, item.completed && styles.completedText]}>
-          {item.title}
-        </Text>
-        <Text style={styles.status}>
-          {item.completed ? "Completed" : "Pending"}
-        </Text>
-      </View>
-      <View style={styles.actions}>
-        <TouchableOpacity onPress={() => toggleTask(item.id)} style={styles.actionBtn}>
-          <Text style={styles.btnText}>✓</Text>
+    <View style={styles.card}>
+      <View style={styles.cardContent}>
+        <TouchableOpacity 
+          style={styles.textContainer} 
+          onPress={() => toggleTask(item.id)}
+        >
+          <Text style={[styles.title, item.completed && styles.completedTitle]}>{item.title}</Text>
+          <View style={[styles.statusBadge, item.completed ? styles.statusCompleted : styles.statusPending]}>
+            <Text style={[styles.statusText, item.completed ? styles.textCompleted : styles.textPending]}>
+              {item.completed ? 'Completed' : 'Pending'}
+            </Text>
+          </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => deleteTask(item.id)} style={[styles.actionBtn, styles.deleteBtn]}>
-          <Text style={styles.btnText}>X</Text>
+      </View>
+      
+      <View style={styles.actions}>
+        <TouchableOpacity 
+          onPress={() => navigation.navigate('TaskDetails', { id: item.id })} 
+          style={styles.actionButton}
+        >
+          <Text style={styles.detailsText}>Details</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => deleteTask(item.id)} style={styles.actionButton}>
+          <Text style={styles.deleteText}>Delete</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -33,54 +40,63 @@ const HomeScreen = ({ navigation }) => {
     <View style={styles.container}>
       <FlatList
         data={tasks}
-        keyExtractor={(item) => item.id}
+        keyExtractor={item => item.id}
         renderItem={renderItem}
+        ListEmptyComponent={() => (
+          <View style={styles.empty}><Text style={styles.emptyText}>No tasks yet. Tap + to add one!</Text></View>
+        )}
       />
-      
-      {/* Floating Action Button */}
-      <TouchableOpacity 
-        style={styles.fab} 
-        onPress={() => navigation.navigate('AddTask')}
-      >
-        <Text style={styles.fabText}>+</Text>
+      <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate('AddTask')}>
+        <Text style={styles.addText}>+</Text>
       </TouchableOpacity>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 10, backgroundColor: '#f5f5f5' },
-  taskCard: {
-    flexDirection: 'row',
-    backgroundColor: 'white',
-    padding: 15,
-    marginVertical: 8,
-    borderRadius: 10,
-    elevation: 3, // Shadow for Android
-    justifyContent: 'space-between',
-    alignItems: 'center'
+  container: { flex: 1, padding: 20, backgroundColor: '#F5F7FA' },
+  empty: { alignItems: 'center', marginTop: 60 },
+  emptyText: { fontSize: 16, color: '#A0AEC0' },
+  card: { 
+    backgroundColor: '#fff', 
+    borderRadius: 16, 
+    padding: 20, 
+    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 3,
   },
-  taskInfo: { flex: 1 },
-  title: { fontSize: 18, fontWeight: 'bold' },
-  completedText: { textDecorationLine: 'line-through', color: 'gray' },
-  status: { fontSize: 12, color: '#666', marginTop: 4 },
-  actions: { flexDirection: 'row' },
-  actionBtn: { padding: 10, marginLeft: 5, backgroundColor: '#4CAF50', borderRadius: 5 },
-  deleteBtn: { backgroundColor: '#F44336' },
-  btnText: { color: 'white', fontWeight: 'bold' },
-  fab: {
-    position: 'absolute',
-    right: 20,
-    bottom: 20,
-    backgroundColor: '#2196F3',
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    justifyContent: 'center',
-    alignItems: 'center',
-    elevation: 5,
+  cardContent: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 16 },
+  textContainer: { flex: 1 },
+  title: { fontSize: 18, fontWeight: '700', color: '#2D3748', marginBottom: 8 },
+  completedTitle: { textDecorationLine: 'line-through', color: '#A0AEC0' },
+  statusBadge: { alignSelf: 'flex-start', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 12 },
+  statusCompleted: { backgroundColor: '#C6F6D5' },
+  statusPending: { backgroundColor: '#FEEBC8' },
+  statusText: { fontSize: 12, fontWeight: '700' },
+  textCompleted: { color: '#22543D' },
+  textPending: { color: '#744210' },
+  actions: { flexDirection: 'row', justifyContent: 'flex-end', borderTopWidth: 1, borderTopColor: '#EDF2F7', paddingTop: 12 },
+  actionButton: { marginLeft: 16, paddingVertical: 4 },
+  detailsText: { color: '#4299E1', fontWeight: '600', fontSize: 14 },
+  deleteText: { color: '#E53E3E', fontWeight: '600', fontSize: 14 },
+  addButton: { 
+    position: 'absolute', 
+    bottom: 30, 
+    right: 30, 
+    width: 64, 
+    height: 64, 
+    borderRadius: 32, 
+    backgroundColor: '#3182CE', 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    shadowColor: '#3182CE',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.3,
+    shadowRadius: 12,
+    elevation: 8 
   },
-  fabText: { fontSize: 30, color: 'white' }
+  addText: { color: '#fff', fontSize: 32, marginTop: -4 }
 });
-
-export default HomeScreen;

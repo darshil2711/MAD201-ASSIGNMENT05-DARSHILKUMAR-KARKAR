@@ -1,3 +1,8 @@
+/*
+ * Course: MAD201-Assignment05
+ * Name: Darshilkumar Karkar
+ * Student ID: A00203357
+ */
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AddTaskScreen from '../screens/AddTaskScreen';

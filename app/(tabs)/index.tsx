@@ -1,3 +1,8 @@
+/*
+ * Course: MAD201-Assignment05
+ * Name: Darshilkumar Karkar
+ * Student ID: A00203357
+ */
 import { Image } from 'expo-image';
 import { Platform, StyleSheet } from 'react-native';
 
